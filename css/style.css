@@ -97,50 +97,32 @@ input:focus {
 
 /* container-game */
 
-.container-game {
+.content-text {
+    display: block;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.game-text {
-    margin-bottom: 200px;
+.sign-of-player {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px 0 16px;
+    margin-bottom: 100px;
 }
 
 table {
     border-collapse: collapse;
+    color: white;
 }
 
 td {
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border: 1px solid white;
     text-align: center;
-}
-
-td:hover {
-    background-color: rgba(157, 78, 221, 0.2);
-}
-
-table td {
-    border: 5px solid white;
-}
-
-td:first-child {
-    border-left: none;
-}
-
-td:last-child {
-    border-right: none;
-}
-
-tr:first-child td {
-    border-top: none;
-}
-
-tr:last-child td {
-    border-bottom: none;
+    font-size: 24px;
 }
 
 /* footer */
