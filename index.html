@@ -16,7 +16,33 @@
         <h1 class="title">Tic-Tac-Toe</h1>
 
         <div class="container" id="container">
-            <button onclick="goToChoseNamesForPlayers()">Start Game</button>
+            <button class="d-none" onclick="goToChoseNamesForPlayers()">Start Game</button>
+            <div class="container-game">
+                <div class="game-text">
+                    <span>It's <b>Player 1</b>'s turn.</span>
+                    <span class="d-none"><b>Player 1</b> won.</span>
+                </div>
+                <div class="container-game-table">
+                    <table id="ticTacToeBoard">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                </div>
+            </div>
         </div>
     
         <footer>
