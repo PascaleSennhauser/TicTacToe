@@ -19,8 +19,8 @@ span {
 .title {
     color: #9d4edd;
     text-align: center;
-    height: 100px;
     font-size: 48px;
+    margin-bottom: 0;
 }
 
 /* main-container */
@@ -108,21 +108,40 @@ input:focus {
     color: white;
     display: flex;
     justify-content: space-between;
-    padding: 0 16px 0 16px;
-    margin-bottom: 100px;
+    padding: 0 50px 0 50px;
+    margin-bottom: 80px;
 }
 
 table {
     border-collapse: collapse;
+    border: 5px solid transparent;
     color: white;
 }
 
 td {
-    width: 50px;
-    height: 50px;
-    border: 1px solid white;
+    width: 100px;
+    height: 100px;
+    border: 5px solid white;
     text-align: center;
-    font-size: 24px;
+    font-size: 36px;
+    cursor: pointer;
+}
+
+td:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+tr:first-child td {
+    border-top: none;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+td:first-child {
+    border-left: none;
+}
+td:last-child {
+    border-right: none;
 }
 
 /* footer */
