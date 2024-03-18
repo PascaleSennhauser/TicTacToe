@@ -19,18 +19,11 @@ const WINNING_COMBINATIONS = [
 let currentPlayer = 'circle';
 
 
-function goToChoseNamesForPlayers() {
+function init() {
     getMainContainer();
     container.innerHTML = '';
     container.innerHTML = /*html*/`
-        <div class="container-names">
-            <form onsubmit="startGame(); return false">
-                <span class="container-names-description">Please enter your player names. (min. 2 and max. 20 signs)</span>
-                <label class="label-player1">Player 1: <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer1"></label>
-                <label class="label-player2">Player 2: <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer2"></label>
-                <button type="submit">Ok</button>
-            </form>
-        </div>
+        <button onclick="goToChoseNamesForPlayers()">Start Game</button>
     `;
 }
 
@@ -41,11 +34,25 @@ function getMainContainer() {
 }
 
 
-function startGame() {
-    saveNames();
+function goToChoseNamesForPlayers() {
     getMainContainer();
     container.innerHTML = '';
-    initGameField(container);
+    container.innerHTML = /*html*/`
+        <div class="container-names">
+            <form onsubmit="startGame(); return false">
+                <span class="container-names-description">Please enter your player names. (min. 2 and max. 20 signs)</span>
+                <label class="label-player1">Player 1 (x): <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer1"></label>
+                <label class="label-player2">Player 2 (o): <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer2"></label>
+                <button type="submit">Ok</button>
+            </form>
+        </div>
+    `;
+}
+
+
+function startGame() {
+    saveNames();
+    initGameField();
 }
 
 
@@ -56,55 +63,88 @@ function saveNames() {
 }
 
 
-function initGameField(container) {
+function initGameField() {
+    renderGameInfo();
+    renderField();
+}
+
+
+function renderGameInfo() {
+    getMainContainer();
     container.innerHTML = '';
+    container.innerHTML = /*html*/`
+        <div id="gameDiv">
+            <div class="gameInfo">
+                <span>It's <b id="currentPlayer">Player 1</b>'s turn.</span>
+                <div class="sign-container">
+                    <div id="signPlayer1">x</div>
+                    <div id="signPlayer2">o</div>
+                </div>
+            </div>
+            <div id="content">
+            </div>
+            <button class="button-restart" onclick="restartGame()">Restart Game</button>
+        </div>
+    `;
 }
 
 
-function init() {
-    render();
-}
-
-
-function render() {
+function renderField() {
     const contentDiv = document.getElementById('content');
-    let symbolCircle = generateCircleSVG();
-    let symbolCross = generateCrossSVG();
-    let tableHtml = `<table>`;
+
+    let tableHtml = '<table>';
     for (let i = 0; i < 3; i++) {
         tableHtml += '<tr>';
         for (let j = 0; j < 3; j++) {
             const index = i * 3 + j;
             let symbol = '';
             if (fields[index] === 'circle') {
-                symbol = symbolCircle;
+                symbol = generateCircleSVG();
             } else if (fields[index] === 'cross') {
-                symbol = symbolCross;
+                symbol = generateCrossSVG();
             }
-            tableHtml += `<td onclick="handleClick(this, ${index})">${symbol}</td>`;
+            tableHtml += /*html*/`<td onclick="handleClick(this, ${index})">${symbol}</td>`;
         }
         tableHtml += '</tr>';
     }
-    tableHtml += `</table>`;
+    tableHtml += '</table>';
 
-    contentDiv.innerHTML = '';
-    contentDiv.innerHTML += /*html*/`
-        <div>
-            <span class="content-text">It's <b>Player 1</b>'s turn.</span>
-            <div class="sign-of-player">
-                <div>${symbolCircle}</div>
-                <div>${symbolCross}</div>
-            </div>
-        </div>
-    `;
-    contentDiv.innerHTML += `<div id="tableContent"></div>`;
-    let tableContentDiv = document.getElementById('tableContent');
-    tableContentDiv.innerHTML += tableHtml;
+    contentDiv.innerHTML = tableHtml;
+}
+
+
+function handleClick(cell, index) {
+    if (fields[index] === null) {
+        fields[index] = currentPlayer;
+        cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVG() : generateCrossSVG();
+        cell.onclick = null;
+        currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
+        if (isGameFinished()) {
+            const winCombination = getWinningCombination();
+            drawWinningLine(winCombination);
+        }
+    }
+}
+
+
+function isGameFinished() {
+    return fields.every((field) => field !== null) || getWinningCombination() !== null;
+}
+
+
+function getWinningCombination() {
+    for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
+        const [a, b, c] = WINNING_COMBINATIONS[i];
+        if (fields[a] === fields[b] && fields[b] === fields[c] && fields[a] !== null) {
+            return WINNING_COMBINATIONS[i];
+        }
+    }
+    return null;
 }
 
 
 function generateCircleSVG() {
-    const color = '#48ff91';
+    const color = '#00B0EF';
     const width = 70;
     const height = 70;
 
@@ -117,7 +157,7 @@ function generateCircleSVG() {
 
 
 function generateCrossSVG() {
-    const color = '#35bcff';
+    const color = '#FFC000';
     const width = 70;
     const height = 70;
 
@@ -140,35 +180,6 @@ function generateCrossSVG() {
 }
 
 
-function handleClick(cell, index) {
-    if (fields[index] === null) {
-        fields[index] = currentPlayer;
-        cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVG() : generateCrossSVG();
-        cell.onclick = null;
-        currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
-        if (isGameFinished()) {
-            const winCombination = getWinningCombination();
-            drawWinningLine(winCombination);
-        }
-    }
-}
-
-
-function isGameFinished() {
-    return fields.every((field) => field !== null) || getWinningCombination() !== null;
-}
-
-function getWinningCombination() {
-    for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
-        const [a, b, c] = WINNING_COMBINATIONS[i];
-        if (fields[a] === fields[b] && fields[b] === fields[c] && fields[a] !== null) {
-            return WINNING_COMBINATIONS[i];
-        }
-    }
-    return null;
-}
-
-
 function drawWinningLine(combination) {
     const lineColor = '#ffffff';
     const lineWidth = 5;
@@ -177,6 +188,8 @@ function drawWinningLine(combination) {
     const endCell = document.querySelectorAll(`td`)[combination[2]];
     const startRect = startCell.getBoundingClientRect();
     const endRect = endCell.getBoundingClientRect();
+
+    const contentRect = document.getElementById('content').getBoundingClientRect();
 
     const lineLength = Math.sqrt(
         Math.pow(endRect.left - startRect.left, 2) + Math.pow(endRect.top - startRect.top, 2)
@@ -188,8 +201,25 @@ function drawWinningLine(combination) {
     line.style.width = `${lineLength}px`;
     line.style.height = `${lineWidth}px`;
     line.style.backgroundColor = lineColor;
-    line.style.top = `${ startRect.top + startRect.height / 2 - lineWidth / 2 } px`;
-    line.style.left = `${ startRect.left + startRect.width / 2 } px`;
-    line.style.transform = `rotate(${ lineAngle }rad)`;
-    document.getElementById('tableContent').appendChild(line);
+    line.style.top = `${startRect.top + startRect.height / 2 - lineWidth / 2 - contentRect.top}px`;
+    line.style.left = `${startRect.left + startRect.width / 2 - contentRect.left}px`;
+    line.style.transform = `rotate(${lineAngle}rad)`;
+    line.style.transformOrigin = `top left`;
+    document.getElementById('content').appendChild(line);
+}
+
+
+function restartGame() {
+    fields = [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    ];
+    renderField();
 }
