@@ -65,14 +65,15 @@ function saveNames() {
 
 function initGameField() {
     renderGameInfo();
+    renderCurrentPlayer();
     renderField();
 }
 
 
 function renderGameInfo() {
     getMainContainer();
-    let smallCross = generateSmallCrossSVG();
-    let smallCircle = generateSmallCircleSVG();
+    let smallCross = generateSmallCrossSVG('#FFC000');
+    let smallCircle = generateSmallCircleSVG('#00B0EF');
     container.innerHTML = '';
     container.innerHTML = /*html*/`
         <div id="gameDiv">
@@ -88,6 +89,23 @@ function renderGameInfo() {
             <button class="button-restart" onclick="restartGame()">Restart Game</button>
         </div>
     `;
+}
+
+
+function renderCurrentPlayer() {
+    let currentPlayerText = document.getElementById('currentPlayer');
+    currentPlayerText.innerHTML = '';
+    let signPlayer1 = document.getElementById('signPlayer1');
+    let signPlayer2 = document.getElementById('signPlayer2');
+    if (currentPlayer == 'circle') {
+        currentPlayerText.innerHTML = player1;
+        signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
+        signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
+    } else {
+        currentPlayerText.innerHTML = player2;
+        signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
+        signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
+    }
 }
 
 
@@ -126,6 +144,7 @@ function handleClick(cell, index) {
             drawWinningLine(winCombination);
         }
     }
+    renderCurrentPlayer();
 }
 
 
@@ -158,8 +177,8 @@ function generateCircleSVG() {
 }
 
 
-function generateSmallCircleSVG() {
-    const color = '#00B0EF';
+function generateSmallCircleSVG(colorCircle) {
+    const color = colorCircle;
     const width = 30;
     const height = 30;
 
@@ -197,8 +216,8 @@ function generateCrossSVG() {
 }
 
 
-function generateSmallCrossSVG() {
-    const color = '#FFC000';
+function generateSmallCrossSVG(colorCross) {
+    const color = colorCross;
     const width = 30;
     const height = 30;
 
