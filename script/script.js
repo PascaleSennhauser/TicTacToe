@@ -41,8 +41,8 @@ function goToChoseNamesForPlayers() {
         <div class="container-names">
             <form onsubmit="startGame(); return false">
                 <span class="container-names-description">Please enter your player names. (min. 2 and max. 20 signs)</span>
-                <label class="label-player1">Player 1 (x): <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer1"></label>
-                <label class="label-player2">Player 2 (o): <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer2"></label>
+                <label class="label-player1">Player 1 (o): <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer1"></label>
+                <label class="label-player2">Player 2 (x): <input placeholder="Name" minlength="2" maxlength="20" required id="inputPlayer2"></label>
                 <button type="submit">Ok</button>
             </form>
         </div>
@@ -71,14 +71,16 @@ function initGameField() {
 
 function renderGameInfo() {
     getMainContainer();
+    let smallCross = generateSmallCrossSVG();
+    let smallCircle = generateSmallCircleSVG();
     container.innerHTML = '';
     container.innerHTML = /*html*/`
         <div id="gameDiv">
             <div class="gameInfo">
-                <span>It's <b id="currentPlayer">Player 1</b>'s turn.</span>
+                <span>It's <b id="currentPlayer">${player1}</b>'s turn.</span>
                 <div class="sign-container">
-                    <div id="signPlayer1">x</div>
-                    <div id="signPlayer2">o</div>
+                    <div id="signPlayer1">${smallCircle}</div>
+                    <div id="signPlayer2">${smallCross}</div>
                 </div>
             </div>
             <div id="content">
@@ -148,11 +150,26 @@ function generateCircleSVG() {
     const width = 70;
     const height = 70;
 
-    return `<svg width="${width}" height="${height}">
+    return /*html*/`<svg width="${width}" height="${height}">
               <circle cx="35" cy="35" r="30" stroke="${color}" stroke-width="5" fill="none">
                 <animate attributeName="stroke-dasharray" from="0 188.5" to="188.5 0" dur="0.2s" fill="freeze" />
               </circle>
             </svg>`;
+}
+
+
+function generateSmallCircleSVG() {
+    const color = '#00B0EF';
+    const width = 30;
+    const height = 30;
+
+    return /*html*/`
+    <svg width="${width}" height="${height}">
+        <circle cx="${width / 2}" cy="${height / 2}" r="${width / 2 - 5}" stroke="${color}" stroke-width="5" fill="none">
+            <animate attributeName="stroke-dasharray" from="0 ${Math.PI * (width / 2 - 5)}" to="${Math.PI * (width / 2 - 5)} 0" dur="0.2s" fill="freeze" />
+        </circle>
+    </svg>
+    `;
 }
 
 
@@ -161,7 +178,7 @@ function generateCrossSVG() {
     const width = 70;
     const height = 70;
 
-    const svgHtml = `
+    const svgHtml = /*html*/`
       <svg width="${width}" height="${height}">
         <line x1="0" y1="0" x2="${width}" y2="${height}"
           stroke="${color}" stroke-width="5">
@@ -174,6 +191,30 @@ function generateCrossSVG() {
           <animate attributeName="y2" values="0; ${height}" dur="200ms" />
         </line>
       </svg>
+    `;
+
+    return svgHtml;
+}
+
+
+function generateSmallCrossSVG() {
+    const color = '#FFC000';
+    const width = 30;
+    const height = 30;
+
+    const svgHtml = /*html*/`
+        <svg width="${width}" height="${height}">
+            <line x1="0" y1="0" x2="${width}" y2="${height}"
+                stroke="${color}" stroke-width="5">
+                <animate attributeName="x2" values="0; ${width}" dur="200ms" />
+                <animate attributeName="y2" values="0; ${height}" dur="200ms" />
+            </line>
+            <line x1="${width}" y1="0" x2="0" y2="${height}"
+                stroke="${color}" stroke-width="5">
+                <animate attributeName="x2" values="${width}; 0" dur="200ms" />
+                <animate attributeName="y2" values="0; ${height}" dur="200ms" />
+            </line>
+        </svg>
     `;
 
     return svgHtml;
