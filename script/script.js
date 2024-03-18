@@ -3,14 +3,15 @@ let player2;
 let fields = [
     null,
     null,
-    'circle',
-    null,
-    'cross',
     null,
     null,
-    'cross',
+    null,
+    null,
+    null,
+    null,
     null
 ];
+let currentPlayer = 'circle';
 
 
 function goToChoseNamesForPlayers() {
@@ -75,7 +76,7 @@ function render() {
             } else if (fields[index] === 'cross') {
                 symbol = symbolCross;
             }
-            tableHtml += `<td>${symbol}</td>`;
+            tableHtml += `<td onclick="handleClick(this, ${index})">${symbol}</td>`;
         }
         tableHtml += '</tr>';
     }
@@ -129,4 +130,14 @@ function generateCrossSVG() {
     `;
 
     return svgHtml;
+}
+
+
+function handleClick(cell, index) {
+    if (fields[index] === null) {
+        fields[index] = currentPlayer;
+        cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVG() : generateCrossSVG();
+        cell.onclick = null;
+        currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
+    }
 }
