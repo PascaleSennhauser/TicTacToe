@@ -1,5 +1,6 @@
 let player1;
 let player2;
+let currentPlayer = 'circle';
 let fields = [
     null,
     null,
@@ -16,7 +17,6 @@ const WINNING_COMBINATIONS = [
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // vertical
     [0, 4, 8], [2, 4, 6], // diagonal
 ];
-let currentPlayer = 'circle';
 
 
 function init() {
@@ -75,7 +75,12 @@ function renderGameInfo() {
     let smallCross = generateSmallCrossSVG('#FFC000');
     let smallCircle = generateSmallCircleSVG('#00B0EF');
     container.innerHTML = '';
-    container.innerHTML = /*html*/`
+    container.innerHTML = gameInfoTemplate(smallCross, smallCircle);
+}
+
+
+function gameInfoTemplate(smallCross, smallCircle) {
+    return /*html*/`
         <div id="gameDiv">
             <div class="gameInfo">
                 <span id="gameInfoText"></span>
@@ -98,42 +103,56 @@ function renderCurrentPlayer() {
     let signPlayer1 = document.getElementById('signPlayer1');
     let signPlayer2 = document.getElementById('signPlayer2');
     if (currentPlayer == 'circle') {
-        gameInfoText.innerHTML = `
-            It's <b>${player1}</b>'s turn.
-        `;
-        signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
-        signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
+        currentPlayerCircle(gameInfoText, player1, signPlayer1, signPlayer2);
     } else {
-        gameInfoText.innerHTML = `
-            It's <b>${player2}</b>'s turn.
-        `;
-        signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
-        signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
+        currentPlayerCross(gameInfoText, player2, signPlayer1, signPlayer2);
     }
+}
+
+
+function currentPlayerCircle(gameInfoText, player1, signPlayer1, signPlayer2) {
+    gameInfoText.innerHTML = `
+        It's <b>${player1}</b>'s turn.
+    `;
+    signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
+    signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
+}
+
+
+function currentPlayerCross(gameInfoText, player2, signPlayer1, signPlayer2) {
+    gameInfoText.innerHTML = `
+        It's <b>${player2}</b>'s turn.
+    `;
+    signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
+    signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
 }
 
 
 function renderField() {
     const contentDiv = document.getElementById('content');
-
     let tableHtml = '<table>';
     for (let i = 0; i < 3; i++) {
         tableHtml += '<tr>';
         for (let j = 0; j < 3; j++) {
             const index = i * 3 + j;
-            let symbol = '';
-            if (fields[index] === 'circle') {
-                symbol = generateCircleSVG();
-            } else if (fields[index] === 'cross') {
-                symbol = generateCrossSVG();
-            }
+            let symbol = generateSymbol(index);
             tableHtml += /*html*/`<td class="td-hover" onclick="handleClick(this, ${index})">${symbol}</td>`;
         }
         tableHtml += '</tr>';
     }
     tableHtml += '</table>';
-
     contentDiv.innerHTML = tableHtml;
+}
+
+
+function generateSymbol(index) {
+    let symbol = '';
+    if (fields[index] === 'circle') {
+        symbol = generateCircleSVG();
+    } else if (fields[index] === 'cross') {
+        symbol = generateCrossSVG();
+    }
+    return symbol;
 }
 
 
@@ -155,7 +174,6 @@ function handleClick(cell, index) {
             }
         }
     }
-    
 }
 
 
@@ -191,18 +209,28 @@ function renderWinner() {
     let signPlayer1 = document.getElementById('signPlayer1');
     let signPlayer2 = document.getElementById('signPlayer2');
     if (currentPlayer == 'cross') {
-        gameInfoText.innerHTML = `
-            <b>${player1}</b> won.
-        `;
-        signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
-        signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
+        winnerPlayer1(gameInfoText, player1, signPlayer1, signPlayer2);
     } else {
-        gameInfoText.innerHTML = `
-            <b>${player2}</b> won.
-        `;
-        signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
-        signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
-    }
+        winnerPlayer2(gameInfoText, player2, signPlayer1, signPlayer2);
+    }   
+}
+
+
+function winnerPlayer1(gameInfoText, player1, signPlayer1, signPlayer2) {
+    gameInfoText.innerHTML = `
+        <b>${player1}</b> won.
+    `;
+    signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
+    signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
+}
+
+
+function winnerPlayer2(gameInfoText, player2, signPlayer1, signPlayer2) {
+    gameInfoText.innerHTML = `
+        <b>${player2}</b> won.
+    `;
+    signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
+    signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
 }
 
 
