@@ -152,7 +152,7 @@ td {
     cursor: pointer;
 }
 
-td:hover {
+.td-hover:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 

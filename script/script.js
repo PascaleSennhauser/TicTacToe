@@ -127,7 +127,7 @@ function renderField() {
             } else if (fields[index] === 'cross') {
                 symbol = generateCrossSVG();
             }
-            tableHtml += /*html*/`<td onclick="handleClick(this, ${index})">${symbol}</td>`;
+            tableHtml += /*html*/`<td class="td-hover" onclick="handleClick(this, ${index})">${symbol}</td>`;
         }
         tableHtml += '</tr>';
     }
@@ -147,10 +147,25 @@ function handleClick(cell, index) {
         if (isGameFinished()) {
             const winCombination = getWinningCombination();
             drawWinningLine(winCombination);
-            renderWinner();
+            removeOnClick();
+            if (getWinningCombination() == null) {
+                renderTieText();
+            } else {
+                renderWinner();
+            }
         }
     }
     
+}
+
+
+function removeOnClick() {
+    const tdElements = document.querySelectorAll('td');
+    tdElements.forEach((td) => {
+        td.onclick = null;
+        td.style.cursor = 'default';
+        td.classList.remove('td-hover');
+    });
 }
 
 
@@ -188,6 +203,17 @@ function renderWinner() {
         signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
         signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
     }
+}
+
+
+function renderTieText() {
+    let gameInfoText = document.getElementById('gameInfoText');
+    gameInfoText.innerHTML = '';
+    gameInfoText.innerHTML = `This match is a tie.`;
+    let signPlayer1 = document.getElementById('signPlayer1');
+    let signPlayer2 = document.getElementById('signPlayer2');
+    signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
+    signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
 }
 
 
@@ -310,4 +336,15 @@ function restartGame() {
     ];
     renderCurrentPlayer();
     renderField();
+    addOnClick();
+}
+
+
+function addOnClick() {
+    const tdElements = document.querySelectorAll('td');
+    tdElements.forEach((td, index) => {
+        td.onclick = () => handleClick(td, index);
+        td.style.cursor = 'pointer';
+        td.classList.add('td-hover');
+    });
 }
