@@ -221,15 +221,25 @@ function handleClick(cell, index) {
         cell.onclick = null;
         currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
         renderCurrentPlayer();
-        if (isGameFinished()) {
-            const winCombination = getWinningCombination();
+        gameFinished();
+    }
+}
+
+
+/**
+ * This function is to render the specific end values.
+ */
+function gameFinished() {
+    if (isGameFinished()) {
+        const winCombination = getWinningCombination();
+        if (winCombination) {
             drawWinningLine(winCombination);
-            removeOnClick();
-            if (getWinningCombination() == null) {
-                renderTieText();
-            } else {
-                renderWinner();
-            }
+        }
+        removeOnClick();
+        if (getWinningCombination() == null) {
+            renderTieText();
+        } else {
+            renderWinner();
         }
     }
 }
