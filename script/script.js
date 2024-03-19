@@ -19,6 +19,9 @@ const WINNING_COMBINATIONS = [
 ];
 
 
+/**
+ * This function invoked in the beginning to show the "Start Game"-button.
+ */
 function init() {
     getMainContainer();
     container.innerHTML = '';
@@ -28,12 +31,19 @@ function init() {
 }
 
 
+/**
+ * This function gets the main-container to put content in it.
+ * @returns The main-container.
+ */
 function getMainContainer() {
     let container = document.getElementById('conatiner');
     return container;
 }
 
 
+/**
+ * This function renders the form to chose the names for the players.
+ */
 function goToChoseNamesForPlayers() {
     getMainContainer();
     container.innerHTML = '';
@@ -50,12 +60,18 @@ function goToChoseNamesForPlayers() {
 }
 
 
+/**
+ * This function starts the main game.
+ */
 function startGame() {
     saveNames();
     initGameField();
 }
 
 
+/**
+ * This function saves the inserted names in the variables player1 and player2.
+ */
 function saveNames() {
     player1 = document.getElementById('inputPlayer1').value;
     player2 = document.getElementById('inputPlayer2').value;
@@ -63,6 +79,9 @@ function saveNames() {
 }
 
 
+/**
+ * This function initializes the tic-tac-toe-field.
+ */
 function initGameField() {
     renderGameInfo();
     renderCurrentPlayer();
@@ -70,6 +89,9 @@ function initGameField() {
 }
 
 
+/**
+ * This function renders the information above the field.
+ */
 function renderGameInfo() {
     getMainContainer();
     let smallCross = generateSmallCrossSVG('#FFC000');
@@ -79,6 +101,12 @@ function renderGameInfo() {
 }
 
 
+/**
+ * This function shows gets the html-template for the information above the field.
+ * @param {HTMLElement} smallCross - The HTML-element of the small cross.
+ * @param {HTMLElement} smallCircle - The HTML-element of the small circle.
+ * @returns The HTML-template of the information, tic-tac-toe-field and restart-button.
+ */
 function gameInfoTemplate(smallCross, smallCircle) {
     return /*html*/`
         <div id="gameDiv">
@@ -97,6 +125,9 @@ function gameInfoTemplate(smallCross, smallCircle) {
 }
 
 
+/**
+ * This runction renders the current player in the text, as well as the sign of the player.
+ */
 function renderCurrentPlayer() {
     let gameInfoText = document.getElementById('gameInfoText');
     gameInfoText.innerHTML = '';
@@ -110,6 +141,13 @@ function renderCurrentPlayer() {
 }
 
 
+/**
+ * This function renders the informations, when the current player is the circle-sign.
+ * @param {HTMLElement} gameInfoText - The HTML-element for the text information.
+ * @param {String} player1 - The name of the player1.
+ * @param {HTMLElement} signPlayer1 - The HTML-element where the sign of the player1 gets put in.
+ * @param {HTMLElement} signPlayer2 - The HTML-element where the sign of the player2 gets put in.
+ */
 function currentPlayerCircle(gameInfoText, player1, signPlayer1, signPlayer2) {
     gameInfoText.innerHTML = `
         It's <b>${player1}</b>'s turn.
@@ -119,6 +157,13 @@ function currentPlayerCircle(gameInfoText, player1, signPlayer1, signPlayer2) {
 }
 
 
+/**
+ * This function renders the information, when the current player is the cross-sign.
+ * @param {HTMLElement} gameInfoText - The HTML-element for the text information.
+ * @param {STring} player2 - The name of the player2.
+ * @param {HTMLElement} signPlayer1 - The HTML-element where the sign of the player1 gets put in.
+ * @param {HTMLElement} signPlayer2 - The HTML-element where the sign of the player2 gets put in.
+ */
 function currentPlayerCross(gameInfoText, player2, signPlayer1, signPlayer2) {
     gameInfoText.innerHTML = `
         It's <b>${player2}</b>'s turn.
@@ -128,6 +173,9 @@ function currentPlayerCross(gameInfoText, player2, signPlayer1, signPlayer2) {
 }
 
 
+/**
+ * This function renders the tic-tac-toe-field.
+ */
 function renderField() {
     const contentDiv = document.getElementById('content');
     let tableHtml = '<table>';
@@ -145,6 +193,11 @@ function renderField() {
 }
 
 
+/**
+ * This function generates the cross or circle in the field.
+ * @param {Number} index - This is the index of the cell.
+ * @returns The generated symbol.
+ */
 function generateSymbol(index) {
     let symbol = '';
     if (fields[index] === 'circle') {
@@ -156,6 +209,11 @@ function generateSymbol(index) {
 }
 
 
+/**
+ * This function is when you click in a cell of the field.
+ * @param {HTMLElement} cell - This is the cell the player clicked.
+ * @param {Number} index - This is the index of the cell.
+ */
 function handleClick(cell, index) {
     if (fields[index] === null) {
         fields[index] = currentPlayer;
@@ -177,6 +235,9 @@ function handleClick(cell, index) {
 }
 
 
+/**
+ * This function removes the onclick-function, when the game is finished.
+ */
 function removeOnClick() {
     const tdElements = document.querySelectorAll('td');
     tdElements.forEach((td) => {
@@ -187,11 +248,19 @@ function removeOnClick() {
 }
 
 
+/**
+ * This function checks if the game is finished.
+ * @returns - True or false.
+ */
 function isGameFinished() {
     return fields.every((field) => field !== null) || getWinningCombination() !== null;
 }
 
 
+/**
+ * This function gets the winning combination.
+ * @returns The winning combination or null gets returned.
+ */
 function getWinningCombination() {
     for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
         const [a, b, c] = WINNING_COMBINATIONS[i];
@@ -203,6 +272,9 @@ function getWinningCombination() {
 }
 
 
+/**
+ * This function renders the winner in the text, as well as the fitting sign.
+ */
 function renderWinner() {
     let gameInfoText = document.getElementById('gameInfoText');
     gameInfoText.innerHTML = '';
@@ -216,6 +288,13 @@ function renderWinner() {
 }
 
 
+/**
+ * This function renders the player1 as the winner.
+ * @param {HTMLElement} gameInfoText - The HTML-element for the text information.
+ * @param {String} player1 - The name of the player1.
+ * @param {HTMLElement} signPlayer1 - The HTML-element where the sign of the player1 gets put in.
+ * @param {HTMLElement} signPlayer2 - The HTML-element where the sign of the player2 gets put in.
+ */
 function winnerPlayer1(gameInfoText, player1, signPlayer1, signPlayer2) {
     gameInfoText.innerHTML = `
         <b>${player1}</b> won.
@@ -225,6 +304,13 @@ function winnerPlayer1(gameInfoText, player1, signPlayer1, signPlayer2) {
 }
 
 
+/**
+ * This function renders the player2 as the winner.
+ * @param {HTMLElement} gameInfoText - The HTML-element for the text information.
+ * @param {String} player2 - The name of the player2.
+ * @param {HTMLElement} signPlayer1 - The HTML-element where the sign of the player1 gets put in.
+ * @param {HTMLElement} signPlayer2 - The HTML-element where the sign of the player2 gets put in.
+ */
 function winnerPlayer2(gameInfoText, player2, signPlayer1, signPlayer2) {
     gameInfoText.innerHTML = `
         <b>${player2}</b> won.
@@ -234,6 +320,9 @@ function winnerPlayer2(gameInfoText, player2, signPlayer1, signPlayer2) {
 }
 
 
+/**
+ * This function renders the information text, when theres a tie.
+ */
 function renderTieText() {
     let gameInfoText = document.getElementById('gameInfoText');
     gameInfoText.innerHTML = '';
@@ -245,6 +334,10 @@ function renderTieText() {
 }
 
 
+/**
+ * This function generates the svg-circle.
+ * @returns The svg of the circle gets returned.
+ */
 function generateCircleSVG() {
     const color = '#00B0EF';
     const width = 70;
@@ -258,6 +351,11 @@ function generateCircleSVG() {
 }
 
 
+/**
+ * This function generates the small-svg-circle.
+ * @param {String} colorCircle - The color of the circle.
+ * @returns The svg of the small circle gets returned.
+ */
 function generateSmallCircleSVG(colorCircle) {
     const color = colorCircle;
     const width = 30;
@@ -273,6 +371,10 @@ function generateSmallCircleSVG(colorCircle) {
 }
 
 
+/**
+ * This function generates the svg-cross.
+ * @returns The svg of the cross gets returned.
+ */
 function generateCrossSVG() {
     const color = '#FFC000';
     const width = 70;
@@ -297,6 +399,11 @@ function generateCrossSVG() {
 }
 
 
+/**
+ * This function generates the small-svg-cross.
+ * @param {String} colorCross - The color of the cross.
+ * @returns The svg of the small cross gets returned.
+ */
 function generateSmallCrossSVG(colorCross) {
     const color = colorCross;
     const width = 30;
@@ -321,6 +428,10 @@ function generateSmallCrossSVG(colorCross) {
 }
 
 
+/**
+ * This function draws the winning line in the field.
+ * @param {Array} combination - The array of the winning combination.
+ */
 function drawWinningLine(combination) {
     const lineColor = '#ffffff';
     const lineWidth = 5;
@@ -350,6 +461,9 @@ function drawWinningLine(combination) {
 }
 
 
+/**
+ * This function restarts the game, when you click on the button.
+ */
 function restartGame() {
     fields = [
         null,
@@ -368,6 +482,9 @@ function restartGame() {
 }
 
 
+/**
+ * The onclick-function of the cells gets added, when you restart the game.
+ */
 function addOnClick() {
     const tdElements = document.querySelectorAll('td');
     tdElements.forEach((td, index) => {
