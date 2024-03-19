@@ -78,7 +78,7 @@ function renderGameInfo() {
     container.innerHTML = /*html*/`
         <div id="gameDiv">
             <div class="gameInfo">
-                <span>It's <b id="currentPlayer">${player1}</b>'s turn.</span>
+                <span id="gameInfoText"></span>
                 <div class="sign-container">
                     <div id="signPlayer1">${smallCircle}</div>
                     <div id="signPlayer2">${smallCross}</div>
@@ -93,16 +93,20 @@ function renderGameInfo() {
 
 
 function renderCurrentPlayer() {
-    let currentPlayerText = document.getElementById('currentPlayer');
-    currentPlayerText.innerHTML = '';
+    let gameInfoText = document.getElementById('gameInfoText');
+    gameInfoText.innerHTML = '';
     let signPlayer1 = document.getElementById('signPlayer1');
     let signPlayer2 = document.getElementById('signPlayer2');
     if (currentPlayer == 'circle') {
-        currentPlayerText.innerHTML = player1;
+        gameInfoText.innerHTML = `
+            It's <b>${player1}</b>'s turn.
+        `;
         signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
         signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
     } else {
-        currentPlayerText.innerHTML = player2;
+        gameInfoText.innerHTML = `
+            It's <b>${player2}</b>'s turn.
+        `;
         signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
         signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
     }
@@ -139,12 +143,14 @@ function handleClick(cell, index) {
         cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVG() : generateCrossSVG();
         cell.onclick = null;
         currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
+        renderCurrentPlayer();
         if (isGameFinished()) {
             const winCombination = getWinningCombination();
             drawWinningLine(winCombination);
+            renderWinner();
         }
     }
-    renderCurrentPlayer();
+    
 }
 
 
@@ -161,6 +167,27 @@ function getWinningCombination() {
         }
     }
     return null;
+}
+
+
+function renderWinner() {
+    let gameInfoText = document.getElementById('gameInfoText');
+    gameInfoText.innerHTML = '';
+    let signPlayer1 = document.getElementById('signPlayer1');
+    let signPlayer2 = document.getElementById('signPlayer2');
+    if (currentPlayer == 'cross') {
+        gameInfoText.innerHTML = `
+            <b>${player1}</b> won.
+        `;
+        signPlayer1.innerHTML = generateSmallCircleSVG('#00B0EF');
+        signPlayer2.innerHTML = generateSmallCrossSVG('rgba(255, 255, 255, 0.2)');
+    } else {
+        gameInfoText.innerHTML = `
+            <b>${player2}</b> won.
+        `;
+        signPlayer1.innerHTML = generateSmallCircleSVG('rgba(255, 255, 255, 0.2)');
+        signPlayer2.innerHTML = generateSmallCrossSVG('#FFC000');
+    }
 }
 
 
@@ -281,5 +308,6 @@ function restartGame() {
         null,
         null
     ];
+    renderCurrentPlayer();
     renderField();
 }

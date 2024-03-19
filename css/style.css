@@ -108,6 +108,10 @@ input:focus {
 .gameInfo {
     color: white;
     margin-bottom: 100px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .gameInfo span {
@@ -116,6 +120,7 @@ input:focus {
 }
 
 .sign-container {
+    width: 100%;
     display: flex;
     justify-content: space-between;
 }
